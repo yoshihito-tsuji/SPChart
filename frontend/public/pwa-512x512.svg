@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="url(#bg512)"/>
+  <!-- S curve (white) -->
+  <path d="M96 128 Q160 128 160 192 Q160 256 256 256 Q352 256 352 320 Q352 384 416 384"
+        stroke="white" stroke-width="32" fill="none" stroke-linecap="round"/>
+  <!-- P curve (light blue) -->
+  <path d="M128 96 Q128 160 192 160 Q256 160 256 256 Q256 352 320 352 Q384 352 384 416"
+        stroke="#93c5fd" stroke-width="32" fill="none" stroke-linecap="round"/>
+  <!-- Grid dots -->
+  <circle cx="160" cy="160" r="20" fill="white" opacity="0.6"/>
+  <circle cx="256" cy="160" r="20" fill="white" opacity="0.6"/>
+  <circle cx="352" cy="160" r="20" fill="white" opacity="0.6"/>
+  <circle cx="160" cy="256" r="20" fill="white" opacity="0.6"/>
+  <circle cx="256" cy="256" r="24" fill="white" opacity="0.9"/>
+  <circle cx="352" cy="256" r="20" fill="white" opacity="0.6"/>
+  <circle cx="160" cy="352" r="20" fill="white" opacity="0.6"/>
+  <circle cx="256" cy="352" r="20" fill="white" opacity="0.6"/>
+  <circle cx="352" cy="352" r="20" fill="white" opacity="0.6"/>
+</svg>

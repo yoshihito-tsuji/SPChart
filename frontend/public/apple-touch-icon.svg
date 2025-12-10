@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="bgApple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <!-- Background (no rounded corners for iOS) -->
+  <rect width="180" height="180" fill="url(#bgApple)"/>
+  <!-- S curve (white) -->
+  <path d="M34 45 Q56 45 56 67 Q56 90 90 90 Q124 90 124 112 Q124 135 146 135"
+        stroke="white" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <!-- P curve (light blue) -->
+  <path d="M45 34 Q45 56 67 56 Q90 56 90 90 Q90 124 112 124 Q135 124 135 146"
+        stroke="#93c5fd" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <!-- Grid dots -->
+  <circle cx="56" cy="56" r="7" fill="white" opacity="0.6"/>
+  <circle cx="90" cy="56" r="7" fill="white" opacity="0.6"/>
+  <circle cx="124" cy="56" r="7" fill="white" opacity="0.6"/>
+  <circle cx="56" cy="90" r="7" fill="white" opacity="0.6"/>
+  <circle cx="90" cy="90" r="9" fill="white" opacity="0.9"/>
+  <circle cx="124" cy="90" r="7" fill="white" opacity="0.6"/>
+  <circle cx="56" cy="124" r="7" fill="white" opacity="0.6"/>
+  <circle cx="90" cy="124" r="7" fill="white" opacity="0.6"/>
+  <circle cx="124" cy="124" r="7" fill="white" opacity="0.6"/>
+</svg>
