@@ -59,14 +59,15 @@ function getCautionBadgeText(level: CautionLevel): string {
 
 /**
  * 注意レベルに応じたバッジクラスを取得
- * コンパクトなバッジスタイル
+ * コンパクトなバッジスタイル（rounded-full, focus-visible対応）
  */
 function getCautionBadgeClass(level: CautionLevel): string {
+  const baseClass = 'text-xs px-2 py-0.5 rounded-full inline-flex items-center gap-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400';
   switch (level) {
     case 'critical':
-      return 'bg-red-500 text-white';
+      return `${baseClass} bg-red-500 text-white`;
     case 'warning':
-      return 'bg-amber-500 text-white';
+      return `${baseClass} bg-amber-500 text-white`;
     default:
       return '';
   }
@@ -90,6 +91,7 @@ function getProblemTooltip(problem: SortedProblem): string {
 /**
  * セルの背景色クラスを取得
  * 逆転セル（高得点帯の誤答、低得点帯の正答）は淡色ハイライト
+ * 既存の注意ハイライトより弱い色で視認性を損ねない
  */
 function getCellBgClass(
   value: number,
@@ -100,17 +102,17 @@ function getCellBgClass(
     // 正答
     if (!isAbovePCurve) {
       // P曲線より下（低得点帯）の正答 = 逆転（ラッキー正答）
-      return 'bg-blue-200';
+      return 'bg-blue-50';
     }
     return 'bg-blue-100';
   } else {
     // 誤答
     if (isLeftOfSCurve) {
-      // S曲線より左側の誤答（要注意）
+      // S曲線より左側の誤答（要注意） - 優先度高
       return 'bg-orange-200';
     } else if (isAbovePCurve) {
-      // P曲線より上（高得点帯）の誤答 = 逆転（意外な誤答）
-      return 'bg-red-100';
+      // P曲線より上（高得点帯）の誤答 = 逆転（意外な誤答）- 薄色
+      return 'bg-red-50';
     } else {
       // S曲線より右側の誤答（期待通り）
       return 'bg-gray-100';
@@ -150,7 +152,8 @@ export function SPTableGrid({ result }: SPTableGridProps) {
                     <span>{problem.id}</span>
                     {badgeText && (
                       <span
-                        className={`text-[10px] leading-tight px-1 rounded ${badgeClass}`}
+                        className={badgeClass}
+                        tabIndex={0}
                       >
                         {badgeText}
                       </span>

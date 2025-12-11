@@ -25,15 +25,17 @@ function getCautionBadgeText(level: CautionLevel): string {
 
 /**
  * 注意レベルに応じたバッジクラスを取得
+ * rounded-full, focus-visible対応
  */
 function getCautionBadgeClass(level: CautionLevel): string {
+  const baseClass = 'text-xs px-2 py-0.5 rounded-full inline-flex items-center gap-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400';
   switch (level) {
     case 'critical':
-      return 'bg-red-500 text-white';
+      return `${baseClass} bg-red-500 text-white`;
     case 'warning':
-      return 'bg-amber-500 text-white';
+      return `${baseClass} bg-amber-500 text-white`;
     default:
-      return 'bg-green-100 text-green-800';
+      return `${baseClass} bg-green-100 text-green-800`;
   }
 }
 
@@ -156,7 +158,8 @@ export function StatsSummary({ result }: StatsSummaryProps) {
                     </td>
                     <td className="py-1 px-2 text-center">
                       <span
-                        className={`text-xs px-1.5 py-0.5 rounded ${badgeClass}`}
+                        className={badgeClass}
+                        tabIndex={0}
                       >
                         {badgeText}
                       </span>
@@ -178,7 +181,7 @@ export function StatsSummary({ result }: StatsSummaryProps) {
             <span>正答</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-blue-200 border border-gray-300"></div>
+            <div className="w-4 h-4 bg-blue-50 border border-gray-300"></div>
             <span>逆転正答（低得点帯）</span>
           </div>
           <div className="flex items-center gap-2">
@@ -186,7 +189,7 @@ export function StatsSummary({ result }: StatsSummaryProps) {
             <span>S曲線左側の誤答（要復習）</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-red-100 border border-gray-300"></div>
+            <div className="w-4 h-4 bg-red-50 border border-gray-300"></div>
             <span>逆転誤答（高得点帯）</span>
           </div>
           <div className="flex items-center gap-2">
