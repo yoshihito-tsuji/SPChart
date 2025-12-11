@@ -2,15 +2,32 @@
  * S-P表グリッド表示コンポーネント
  */
 
-import type { SPTableResult } from '../types/sp';
-import { getCautionLevel } from '../types/sp';
+import type { SPTableResult, SortedProblem } from '../types/sp';
+import { getCautionLevel, type CautionLevel } from '../types/sp';
 
 interface SPTableGridProps {
   result: SPTableResult;
 }
 
 /**
- * 注意レベルに応じた背景色クラスを取得
+ * 注意レベルに応じた背景色クラスを取得（ヘッダー用）
+ * WCAGコントラスト確保: Amber/Red + text-slate-900
+ */
+function getHeaderCautionBgClass(level: CautionLevel): string {
+  switch (level) {
+    case 'critical':
+      return 'bg-red-200';
+    case 'warning':
+      return 'bg-amber-200';
+    case 'unknown':
+      return 'bg-gray-200';
+    default:
+      return 'bg-gray-50';
+  }
+}
+
+/**
+ * 注意レベルに応じた背景色クラスを取得（セル用）
  */
 function getCautionBgClass(cautionIndex: number | null): string {
   const level = getCautionLevel(cautionIndex);
@@ -27,17 +44,73 @@ function getCautionBgClass(cautionIndex: number | null): string {
 }
 
 /**
- * セルの背景色クラスを取得
+ * 注意レベルに応じたバッジテキストを取得
  */
-function getCellBgClass(value: number, isLeftOfSCurve: boolean): string {
+function getCautionBadgeText(level: CautionLevel): string {
+  switch (level) {
+    case 'critical':
+      return '特注';
+    case 'warning':
+      return '注意';
+    default:
+      return '';
+  }
+}
+
+/**
+ * 注意レベルに応じたバッジクラスを取得
+ * コンパクトなバッジスタイル
+ */
+function getCautionBadgeClass(level: CautionLevel): string {
+  switch (level) {
+    case 'critical':
+      return 'bg-red-500 text-white';
+    case 'warning':
+      return 'bg-amber-500 text-white';
+    default:
+      return '';
+  }
+}
+
+/**
+ * 問題ヘッダーのツールチップテキストを生成
+ */
+function getProblemTooltip(problem: SortedProblem): string {
+  const cpText = problem.cautionIndex !== null
+    ? `CP=${problem.cautionIndex.toFixed(2)}`
+    : 'CP=計算不可';
+  const rateText = `正答率=${(problem.correctRate * 100).toFixed(0)}%`;
+  const level = getCautionLevel(problem.cautionIndex);
+  const statusText = level === 'critical' ? '【特に注意】'
+    : level === 'warning' ? '【要注意】'
+    : '';
+  return `${problem.id}\n${cpText}, ${rateText}\n${statusText}`.trim();
+}
+
+/**
+ * セルの背景色クラスを取得
+ * 逆転セル（高得点帯の誤答、低得点帯の正答）は淡色ハイライト
+ */
+function getCellBgClass(
+  value: number,
+  isLeftOfSCurve: boolean,
+  isAbovePCurve: boolean
+): string {
   if (value === 1) {
     // 正答
+    if (!isAbovePCurve) {
+      // P曲線より下（低得点帯）の正答 = 逆転（ラッキー正答）
+      return 'bg-blue-200';
+    }
     return 'bg-blue-100';
   } else {
     // 誤答
     if (isLeftOfSCurve) {
       // S曲線より左側の誤答（要注意）
       return 'bg-orange-200';
+    } else if (isAbovePCurve) {
+      // P曲線より上（高得点帯）の誤答 = 逆転（意外な誤答）
+      return 'bg-red-100';
     } else {
       // S曲線より右側の誤答（期待通り）
       return 'bg-gray-100';
@@ -57,19 +130,35 @@ export function SPTableGrid({ result }: SPTableGridProps) {
             <th className="border border-gray-300 p-1 bg-gray-50 sticky left-0 z-20">
               生徒＼問題
             </th>
-            {/* 問題ID */}
-            {sortedProblems.map((problem) => (
-              <th
-                key={problem.id}
-                className={`
-                  border border-gray-300 p-1 text-center min-w-[40px]
-                  ${getCautionBgClass(problem.cautionIndex)}
-                `}
-                title={`${problem.id}\n正答者数: ${problem.correctCount}\n正答率: ${(problem.correctRate * 100).toFixed(1)}%\nCP: ${problem.cautionIndex?.toFixed(3) ?? '計算不可'}`}
-              >
-                {problem.id}
-              </th>
-            ))}
+            {/* 問題ID + CPバッジ */}
+            {sortedProblems.map((problem) => {
+              const level = getCautionLevel(problem.cautionIndex);
+              const badgeText = getCautionBadgeText(level);
+              const badgeClass = getCautionBadgeClass(level);
+              const headerBgClass = getHeaderCautionBgClass(level);
+              return (
+                <th
+                  key={problem.id}
+                  className={`
+                    border border-gray-300 p-1 text-center min-w-[40px] text-slate-900
+                    ${headerBgClass}
+                  `}
+                  title={getProblemTooltip(problem)}
+                  tabIndex={0}
+                >
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span>{problem.id}</span>
+                    {badgeText && (
+                      <span
+                        className={`text-[10px] leading-tight px-1 rounded ${badgeClass}`}
+                      >
+                        {badgeText}
+                      </span>
+                    )}
+                  </div>
+                </th>
+              );
+            })}
             {/* 得点列 */}
             <th className="border border-gray-300 p-1 bg-gray-50 sticky right-0 z-20">
               得点
@@ -95,12 +184,15 @@ export function SPTableGrid({ result }: SPTableGridProps) {
               {/* 回答セル */}
               {sortedMatrix[i].map((value, j) => {
                 const isLeftOfSCurve = j < student.totalScore;
+                const problem = sortedProblems[j];
+                // P曲線より上 = この生徒の順位がこの問題の正答者数より小さい
+                const isAbovePCurve = i < problem.correctCount;
                 return (
                   <td
                     key={j}
                     className={`
                       border border-gray-300 p-1 text-center
-                      ${getCellBgClass(value, isLeftOfSCurve)}
+                      ${getCellBgClass(value, isLeftOfSCurve, isAbovePCurve)}
                     `}
                   >
                     {value}
