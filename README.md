@@ -30,6 +30,34 @@ SPChartは、佐藤隆博（1969年開発）によるS-P表理論に基づく教
 - **スタイリング**: Tailwind CSS
 - **配布形式**: Webアプリ（PWA対応予定）
 
+---
+
+## 🚨 重要：AI担当者への最優先指示
+
+**このREADME.mdを最初から最後まで必ず精読してください。**
+
+このプロジェクトは [Dev-Rules](https://github.com/yoshihito-tsuji/Dev-Rules) の三者協働開発方法論に基づいて開発されています。
+**開発方法論の詳細については Dev-Rulesリポジトリを必ず参照**してください。
+
+### 📋 AI起動時の必須手順（5ステップ）
+
+1. **README.md精読** → プロジェクト全体像を把握
+2. **CLAUDE.md / Codex.md確認** → 自分の役割定義を確認
+3. **LOG確認** → `LOG/YYYY-MM-DD.md` で当日の作業状況を確認
+4. **DECISIONS.md確認** → 重要な決定事項を確認
+5. **From/To形式で応答開始** → 必ず「From: [あなたの名前] / To: [受信者名]」形式で開始
+
+### ⚠️ 禁止事項
+
+- README.mdを読まずに作業を開始すること
+- 三者協働ルールを無視して単独で判断すること
+- From/To形式を使わずに応答すること
+- **日本語以外の言語（英語等）で応答・ドキュメント・コメントを記述すること**
+
+詳細は [Dev-Rules README](https://github.com/yoshihito-tsuji/Dev-Rules/blob/main/README.md) を参照。
+
+---
+
 ## 開発体制
 
 本プロジェクトは**三者間協働開発モデル**を採用しています。
@@ -59,7 +87,10 @@ To: [宛先]
 - `From: Claude Code` / `To: Yoshihitoさん` - 進捗報告、確認依頼
 - `From: Codex` / `To: Claude Code` - 設計指示、レビュー結果
 
-詳細は [docs/team_ops/](docs/team_ops/) を参照。
+詳細は以下を参照：
+
+- **[Dev-Rules](https://github.com/yoshihito-tsuji/Dev-Rules)** - 三者協働開発方法論アーカイブ（全プロジェクト共通）
+- [docs/team_ops/](docs/team_ops/) - プロジェクト固有の運用ドキュメント
 
 ## プロジェクト構成
 
